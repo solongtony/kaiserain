@@ -1,13 +1,15 @@
 
 
-## TODO list
-
-* Pull number pad key handling from original tutorial
-In part 11, the original tutorial added number pad key support, with diagonals and 5 for wait.  This version of the tutorial uses the awful "hjkl" direction keys and even worse "yubn" diagonals. And "z" for wait. 'Cause that makes sense.
+## Change list
 
 * Randomize combat
 I want to add a random element to combat.  This will avoid leveling up to where lesser creatures have no chance to hurt you.  My idea for randomness is to "flip a coin" i.e. roll a two sided die for each point.  So for a power of 5, roll 5d2.  The sum will be 0-5.  This makes the range of values correspond nicely (directly) to the stated values.
 By making defense randomized as well, it will avoid where some creatures cannot ever damage you.  On average, the values from the random function will be 1/2 the value of the stat.  I could compensate by doubling the stats in each creature type.
+
+## TODO list
+
+* Pull number pad key handling from original tutorial
+In part 11, the original tutorial added number pad key support, with diagonals and 5 for wait.  This version of the tutorial uses the awful "hjkl" direction keys and even worse "yubn" diagonals. And "z" for wait. 'Cause that makes sense.
 
 * Dialog
 Interaction other than fighting.  I'm imagining SIMs like menus of ways to interact.
