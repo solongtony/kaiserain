@@ -1,24 +1,19 @@
 import libtcodpy as libtcod
 from random import randint
 
-from components.ai import BasicMonster
+# from components.ai import BasicMonster
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable
-from components.fighter import Fighter
+# from components.fighter import Fighter
 from components.item import Item
 from components.stairs import Stairs
-
 from entity import Entity
-
 from game_messages import Message
-
 from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
-
+from map_objects.creature_types import CreatureTypes
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
-
 from random_utils import from_dungeon_level, random_choice_from_dict
-
 from render_functions import RenderOrder
 
 
@@ -152,18 +147,9 @@ class GameMap:
                 monster_choice = random_choice_from_dict(monster_chances)
 
                 if monster_choice == 'orc':
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
-                    ai_component = BasicMonster()
-
-                    monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
-                                     render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
+                    monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.ORC)
                 else:
-                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100)
-                    ai_component = BasicMonster()
-
-                    monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,
-                                     render_order=RenderOrder.ACTOR, ai=ai_component)
-
+                    monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.ORC)
                 entities.append(monster)
 
         for i in range(number_of_items):
