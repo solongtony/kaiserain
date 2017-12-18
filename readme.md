@@ -6,16 +6,34 @@
 I want to add a random element to combat.  This will avoid leveling up to where lesser creatures have no chance to hurt you.  My idea for randomness is to "flip a coin" i.e. roll a two sided die for each point.  So for a power of 5, roll 5d2.  The sum will be 0-5.  This makes the range of values correspond nicely (directly) to the stated values.
 By making defense randomized as well, it will avoid where some creatures cannot ever damage you.  On average, the values from the random function will be 1/2 the value of the stat.  I could compensate by doubling the stats in each creature type.
 
+* Data driven creature definitions
+
 ## TODO list
+
+* Unit tests
+Needed
+
+* Arena / Map editor
+Ability to create specific scenarios, for testing and fun
 
 * Pull number pad key handling from original tutorial
 In part 11, the original tutorial added number pad key support, with diagonals and 5 for wait.  This version of the tutorial uses the awful "hjkl" direction keys and even worse "yubn" diagonals. And "z" for wait. 'Cause that makes sense.
+
+* Equipment
+1) Organize items by type and number
+  * reading a list of 8 of the same potion mixed in with random scrolls is annoying
+2) Limit carrying by weight
+
+* Monster movement
+1) Add a fall-back move calculator for when A* pathing is blocked.
+2) Allow monsters to move when not in sight.
+   Possibly only if they have seen the player then move to player's last known position.
 
 * Dialog
 Interaction other than fighting.  I'm imagining SIMs like menus of ways to interact.
 
 * Data-driven components
-Items, monsters, NPCs, places defined in data.
+Items, NPCs, places defined in data.
 Spells are more closely tied to code, b/c of the diverse possible affects.
 
 ## Surface world
