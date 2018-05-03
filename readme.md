@@ -8,10 +8,12 @@ To start the game, run `python3 engine.py` or `python engine.py` depending on th
 # Change list
 
 * Randomized combat
-I want to add a random element to combat.  This will avoid leveling up to where lesser creatures have no chance to hurt you.  My idea for randomness is to "flip a coin" i.e. roll a two sided die for each point.  So for a power of 5, roll 5d2.  The sum will be 0-5.  This makes the range of values correspond nicely (directly) to the stated values.
-By making defense randomized as well, it will avoid where some creatures cannot ever damage you.  On average, the values from the random function will be 1/2 the value of the stat.  I could compensate by doubling the stats in each creature type.
+Added random element to combat.  This avoids leveling up to where lesser creatures have no chance to hurt you.  The method of randomness is to "flip a coin" i.e. roll a two sided die for each point.  So for a power of 5, roll 5d2.  The sum will be 0-5.  This makes the range of values correspond nicely (directly) to the stated values.
+By making defense randomized as well, it will avoids the situation where some creatures cannot ever damage you.  On average, the values from the random function will be 1/2 the value of the stat.  I could compensate by doubling the stats in each creature type.
 
 * Data driven creature definitions
+
+* Numpad key handling
 
 # TODO list
 
@@ -29,9 +31,6 @@ Ability to create specific scenarios, for testing and fun
 If I hold a direction key down, character continues to move in that direction after releasing the key.
 This can be fatal, if you run into a wall and monsters keep attacking you.
 This was specifically mentioned as being addressed in the original tutorial, need to look that up.
-
-* Pull number pad key handling from original tutorial
-In part 11, the original tutorial added number pad key support, with diagonals and 5 for wait.  This version of the tutorial uses the awful "hjkl" direction keys and even worse "yubn" diagonals. And "z" for wait. 'Cause that makes sense.
 
 * Equipment
 1) Organize items by type and number
@@ -61,6 +60,8 @@ Interaction other than fighting.  I'm imagining SIMs like menus of ways to inter
 * Data-driven components
 Items, NPCs, places defined in data.
 Spells are more closely tied to code, b/c of the diverse possible affects.
+
+* Up ladders.  Need to save the level state so you can come back to it.
 
 # Possible game additions
 
