@@ -19,49 +19,60 @@ def handle_keys(key, game_state):
 
     return {}
 
+DIRECTIONS = {
+    'up': (0, -1),
+    'down': (0, 1),
+    'left': (-1, 0),
+    'right': (1, 0),
+    'up_left': (-1, -1),
+    'up_right': (1, -1),
+    'down_left': (-1, 1),
+    'down_right': (1, 1)
+}
 
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
 
-    # Movement keys
-    # Arrows and Vi style hjkl
-    # TODO: add in number pad support.
-    if key.vk == libtcod.KEY_UP or key_char == 'k':
-        return {'move': (0, -1)}
-    elif key.vk == libtcod.KEY_DOWN or key_char == 'j':
-        return {'move': (0, 1)}
-    elif key.vk == libtcod.KEY_LEFT or key_char == 'h':
-        return {'move': (-1, 0)}
-    elif key.vk == libtcod.KEY_RIGHT or key_char == 'l':
-    # diagonals
-        return {'move': (1, 0)}
-    elif key_char == 'y':
-        return {'move': (-1, -1)}
-    elif key_char == 'u':
-        return {'move': (1, -1)}
-    elif key_char == 'b':
-        return {'move': (-1, 1)}
-    elif key_char == 'n':
-        return {'move': (1, 1)}
+    # The arrow keys
+    if key.vk == libtcod.KEY_UP:
+        return {'move': DIRECTIONS['up']}
+    elif key.vk == libtcod.KEY_DOWN:
+        return {'move': DIRECTIONS['down']}
+    elif key.vk == libtcod.KEY_LEFT:
+        return {'move': DIRECTIONS['left']}
+    elif key.vk == libtcod.KEY_RIGHT:
+        return {'move': DIRECTIONS['right']}
+
+    # The number pad ("Key pad"?)
+    elif key.vk == libtcod.KEY_KP1:
+        return {'move': DIRECTIONS['down_left']}
+    elif key.vk == libtcod.KEY_KP2:
+        return {'move': DIRECTIONS['down']}
+    elif key.vk == libtcod.KEY_KP3:
+        return {'move': DIRECTIONS['down_right']}
+    elif key.vk == libtcod.KEY_KP4:
+        return {'move': DIRECTIONS['left']}
+    elif key.vk == libtcod.KEY_KP5:
+        return {'wait': True} # center
+    elif key.vk == libtcod.KEY_KP6:
+         return {'move': DIRECTIONS['right']}
+    elif key.vk == libtcod.KEY_KP7:
+         return {'move': DIRECTIONS['up_left']}
+    elif key.vk == libtcod.KEY_KP8:
+         return {'move': DIRECTIONS['up']}
+    elif key.vk == libtcod.KEY_KP9:
+         return {'move': DIRECTIONS['up_right']}
 
     # Actions
 
-    # worst wait key ever
-    elif key_char == 'z':
-        return {'wait': True}
-
     if key_char == 'g':
         return {'pickup': True}
-
     elif key_char == 'i':
         return {'show_inventory': True}
-
     elif key_char == 'd':
         return {'drop_inventory': True}
-
     elif key.vk == libtcod.KEY_ENTER:
         return {'take_stairs': True}
-
     elif key_char == 'c':
         return {'show_character_screen': True}
 
