@@ -17,12 +17,16 @@ By making defense randomized as well, it will avoids the situation where some cr
 
 # TODO list
 
+* More monster types.
+
 * Messaging
-show message when path is blocked
+show message when path is blocked ("Ouch! ran into the <thing>")
 show message / blank line _something_ between turns when fighting
 
 * Unit tests
 Needed
+
+* Skills, abilities, classes, etc.
 
 * Arena / Map editor
 Ability to create specific scenarios, for testing and fun
