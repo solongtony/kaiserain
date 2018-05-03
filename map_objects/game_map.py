@@ -149,7 +149,7 @@ class GameMap:
                 if monster_choice == 'orc':
                     monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.ORC)
                 else:
-                    monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.ORC)
+                    monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.TROLL)
                 entities.append(monster)
 
         for i in range(number_of_items):
