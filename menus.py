@@ -52,8 +52,9 @@ def main_menu(con, background_image, screen_width, screen_height):
     libtcod.image_blit_2x(background_image, 0, 0, 0)
 
     libtcod.console_set_default_foreground(0, libtcod.light_yellow)
-    libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE, libtcod.CENTER,
-                             'Kaiserain')
+    libtcod.console_print_ex(
+        0, int(screen_width / 2), int(screen_height / 2) - 4,
+        libtcod.BKGND_NONE, libtcod.CENTER, 'Kaiserain')
 
     menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)
 
@@ -69,12 +70,8 @@ def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
 def make_window_printer(window, width, height, background, alignment):
     def window_printer(x, y, message):
         libtcod.console_print_rect_ex(
-            window,
-            x, y,
-            width, height,
-            background,
-            alignment,
-            message)
+            window, x, y, width, height,
+            background, alignment, message)
     return window_printer
 
 def character_screen(player, character_screen_width, character_screen_height, screen_width, screen_height):
