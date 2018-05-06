@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 engine.py
+python3 src/engine.py

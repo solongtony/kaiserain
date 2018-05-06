@@ -68,7 +68,7 @@ MAC=False
 MINGW=False
 MSVC=False
 
-def _get_cdll(libname):
+def _get_cdll(libname, path = None):
     '''
         get the library libname using a manual search path that will first
         check the package directory and then the development path
@@ -101,6 +101,25 @@ def _get_cdll(libname):
     pythonExePath = sys.executable
     pythonExeArchitecture = get_pe_architecture(pythonExePath)
 
+    if path:
+        pathsToTry = [ os.path.join(path, libname) ]
+    else:
+        pathsToTry = _cdl_paths(libname)
+
+    for libPath in pathsToTry:
+        if os.path.exists(libPath):
+            # get library from the package
+            libArchitecture = get_pe_architecture(libPath)
+            if libArchitecture != pythonExeArchitecture:
+                libName = os.path.basename(libPath)
+                print ("Error: Incompatible architecture, python is %s, %s is %s" % (pythonExeArchitecture, libName, libArchitecture))
+                sys.exit(1)
+            return ctypes.cdll[libPath]
+
+    raise Exception("unable to locate: "+ libname)
+
+
+def _cdl_paths(libname):
     pathsToTry = []
     # 1. Try the directory this script is located in.
     pathsToTry.append(os.path.join(__path__[0], libname))
@@ -122,21 +141,10 @@ def _get_cdll(libname):
     pythonPath = os.path.join(potentialTopLevelPath, "python")
     if os.path.exists(pythonPath):
         pathsToTry.append(os.path.join(potentialTopLevelPath, libname))
-
-    for libPath in pathsToTry:
-        if os.path.exists(libPath):
-            # get library from the package
-            libArchitecture = get_pe_architecture(libPath)
-            if libArchitecture != pythonExeArchitecture:
-                libName = os.path.basename(libPath)
-                print ("Error: Incompatible architecture, python is %s, %s is %s" % (pythonExeArchitecture, libName, libArchitecture))
-                sys.exit(1)
-            return ctypes.cdll[libPath]
-
-    raise Exception("unable to locate: "+ libname)
+    return pathsToTry
 
 if sys.platform.find('linux') != -1:
-    _lib = _get_cdll('libtcod.so')
+    _lib = _get_cdll('libtcod.so', 'lib/')
     LINUX=True
 elif sys.platform.find('darwin') != -1:
     _lib = _get_cdll('libtcod.dylib')
