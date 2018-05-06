@@ -6,9 +6,10 @@ from game_states import GameStates
 
 from render_functions import RenderOrder
 
+CORPSE_CHAR = '%'
 
 def kill_player(player):
-    player.char = '%'
+    player.char = CORPSE_CHAR
     player.color = libtcod.dark_red
 
     return Message('You died!', libtcod.red), GameStates.PLAYER_DEAD
@@ -17,7 +18,7 @@ def kill_player(player):
 def kill_monster(monster):
     death_message = Message('{0} is dead!'.format(monster.name.capitalize()), libtcod.orange)
 
-    monster.char = '%'
+    monster.char = CORPSE_CHAR
     monster.color = libtcod.dark_red
     monster.blocks = False
     monster.fighter = None
