@@ -1,16 +1,12 @@
 import libtcodpy as libtcod
 from random import randint
 
-# from components.ai import BasicMonster
-from components.equipment import EquipmentSlots
-from components.equippable import Equippable
-# from components.fighter import Fighter
-from components.item import Item
+
 from components.stairs import Stairs
 from entity import Entity
 from game_messages import Message
-from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 from map_objects.creature_types import CreatureTypes
+from map_objects.item_types import ItemTypes
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
 from random_utils import from_dungeon_level, random_choice_from_dict
@@ -158,36 +154,22 @@ class GameMap:
             x = randint(room.x1 + 1, room.x2 - 1)
             y = randint(room.y1 + 1, room.y2 - 1)
 
+            # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 item_choice = random_choice_from_dict(item_chances)
 
-                # TODO: make ItemTypes like the existing CreatureTypes to clean up this code.
                 if item_choice == 'healing_potion':
-                    item_component = Item(use_function=heal, amount=40)
-                    item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
-                                  item=item_component)
+                    item = ItemTypes.make_item_entity(x, y, ItemTypes.HEALING_POTION)
                 elif item_choice == 'sword':
-                    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
-                    item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
+                    item = ItemTypes.make_item_entity(x, y, ItemTypes.SWORD)
                 elif item_choice == 'shield':
-                    equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
-                    item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
+                    item = ItemTypes.make_item_entity(x, y, ItemTypes.SHIELD)
                 elif item_choice == 'fireball_scroll':
-                    item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
-                        'Left-click a target tile for the fireball, or right-click to cancel.', libtcod.light_cyan),
-                                          damage=25, radius=3)
-                    item = Entity(x, y, '#', libtcod.red, 'Fireball Scroll', render_order=RenderOrder.ITEM,
-                                  item=item_component)
+                    item = ItemTypes.make_item_entity(x, y, ItemTypes.FIREBALL_SCROLL)
                 elif item_choice == 'confusion_scroll':
-                    item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message(
-                        'Left-click an enemy to confuse it, or right-click to cancel.', libtcod.light_cyan))
-                    item = Entity(x, y, '#', libtcod.light_pink, 'Confusion Scroll', render_order=RenderOrder.ITEM,
-                                  item=item_component)
+                    item = ItemTypes.make_item_entity(x, y, ItemTypes.CONFUSION_SCROLL)
                 else:
-                    item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
-                    item = Entity(x, y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
-                                  item=item_component)
-
+                    item = ItemTypes.make_item_entity(x, y, ItemTypes.LIGHTNING_SCROLL)
                 entities.append(item)
 
     def is_blocked(self, x, y):
