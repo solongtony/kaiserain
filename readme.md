@@ -51,6 +51,10 @@ Ability to create specific scenarios, for testing and fun
 * Auto walk
 ability to walk in one direction until path ends, a monster comes into sight, damage is taken, etc.
 
+* Movement code
+Movement code needs to be separated out from the base entity.  Not all entities
+move, so that's not the right place for it.
+
 * Monster movement
 1) Add a fall-back move calculator for when A* pathing is blocked.
 2) Allow monsters to move when not in sight.

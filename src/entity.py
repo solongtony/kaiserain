@@ -58,6 +58,10 @@ class Entity:
                 self.item = item
                 self.item.owner = self
 
+    # TODO: movement stuff does not need to be in the base Entity class.
+    # Entities like stairs and items do not move.  this should all go in a
+    # monster or creature class.
+
     def move(self, dx, dy):
         # Move the entity by a given amount
         self.x += dx
