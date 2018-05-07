@@ -83,6 +83,8 @@ class Entity:
         dy = other.y - self.y
         return math.sqrt(dx ** 2 + dy ** 2)
 
+    # BUG: Monsters stop moving when there is not a continuous path to the PC,
+    # even if they could get closer than they are.
     def move_astar(self, target, entities, game_map):
         # Create a FOV map that has the dimensions of the map
         fov = libtcod.map_new(game_map.width, game_map.height)

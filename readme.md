@@ -12,8 +12,20 @@ Added random element to combat.  This avoids leveling up to where lesser creatur
 By making defense randomized as well, it will avoids the situation where some creatures cannot ever damage you.  On average, the values from the random function will be 1/2 the value of the stat.  I could compensate by doubling the stats in each creature type.
 
 * Data driven creature definitions
-
+* Data driven item definitions
 * Numpad key handling
+
+# Bugs
+
+* Monster movement
+Monsters stop moving when there is not a continuous path to the PC, even if they
+could get closer than they are.  See "Monster Movement" TODO.
+
+* Direction key
+If I hold a direction key down, character continues to move in that direction
+after releasing the key. This can be fatal, if you run into a wall and monsters
+keep attacking you. This was specifically mentioned as being addressed in the
+original tutorial, need to look that up.
 
 # TODO list
 
@@ -30,11 +42,6 @@ Needed
 
 * Arena / Map editor
 Ability to create specific scenarios, for testing and fun
-
-* Direction key bug
-If I hold a direction key down, character continues to move in that direction after releasing the key.
-This can be fatal, if you run into a wall and monsters keep attacking you.
-This was specifically mentioned as being addressed in the original tutorial, need to look that up.
 
 * Equipment
 1) Organize items by type and number
