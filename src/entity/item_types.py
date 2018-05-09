@@ -5,7 +5,7 @@ import libtcodpy as libtcod
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.item import Item
-from entity import Entity
+from entity.entity import Entity
 from game_messages import Message
 from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
 from render_functions import RenderOrder

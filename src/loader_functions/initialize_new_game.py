@@ -6,7 +6,7 @@ from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 
-from entity import Entity
+from entity.entity import Entity
 
 from equipment_slots import EquipmentSlots
 

@@ -1,7 +1,7 @@
 import libtcodpy as libtcod
 
 from death_functions import kill_monster, kill_player
-from entity import get_blocking_entities_at_location
+from entity.entity import get_blocking_entities_at_location
 from fov_functions import initialize_fov, recompute_fov
 from game_messages import Message
 from game_states import GameStates

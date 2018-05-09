@@ -4,7 +4,7 @@ import libtcodpy as libtcod
 
 from components.ai import BasicMonster
 from components.fighter import Fighter
-from entity import Entity
+from entity.entity import Entity
 from render_functions import RenderOrder
 
 class CreatureTypes(Enum):

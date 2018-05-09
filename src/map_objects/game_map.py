@@ -3,10 +3,10 @@ from random import randint
 
 
 from components.stairs import Stairs
-from entity import Entity
+from entity.entity import Entity
 from game_messages import Message
-from map_objects.creature_types import CreatureTypes
-from map_objects.item_types import ItemTypes
+from entity.creature_types import CreatureTypes
+from entity.item_types import ItemTypes
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
 from random_utils import from_dungeon_level, random_choice_from_dict
