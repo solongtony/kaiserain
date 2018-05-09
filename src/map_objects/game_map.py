@@ -110,14 +110,22 @@ class GameMap:
         self.place_items(room, entities)
 
     def place_monsters(self, room, entities):
-        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
+        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [4, 6], [5, 9]], self.dungeon_level)
 
         # Get a random number of monsters
         number_of_monsters = randint(0, max_monsters_per_room)
 
+
         monster_chances = {
-            CreatureTypes.ORC: 80,
-            CreatureTypes.TROLL: from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level)
+            # TODO: check the difficulty of each level several times and tweak probabilities.
+            CreatureTypes.LARGE_RAT: from_dungeon_level([[80, 1], [60, 2], [40, 3], [20, 5], [0, 7]], self.dungeon_level),
+            CreatureTypes.BOA_SNAKE: 20,
+            CreatureTypes.GIANT_SPIDER: from_dungeon_level([[20, 2], [30, 4], [50, 8]], self.dungeon_level),
+            CreatureTypes.BROWN_BEAR: from_dungeon_level([[15, 4], [30, 7], [60, 10]], self.dungeon_level),
+            CreatureTypes.GOBLIN: from_dungeon_level([[60, 1], [50, 3], [30, 5], [10, 7], [0, 10]], self.dungeon_level),
+            CreatureTypes.ORC: 50,
+            CreatureTypes.TROLL: from_dungeon_level([[5, 3], [15, 5], [30, 7], [60, 9]], self.dungeon_level),
+            CreatureTypes.OGRE: from_dungeon_level([[5, 7], [20, 9], [40, 11]], self.dungeon_level)
         }
 
         for i in range(number_of_monsters):

@@ -8,18 +8,55 @@ from entity.entity import Entity
 from render_functions import RenderOrder
 
 class CreatureTypes(Enum):
+    # Animals
+    LARGE_RAT = {
+        'name': 'Large Rat',
+        'character': 'r',
+        'color': libtcod.darkest_sepia,
+        'stats': {'hp':5, 'defense':4, 'power':1, 'xp':5}
+    }
+    BOA_SNAKE = {
+        'name': 'Boa Consrictor',
+        'character': 's',
+        'color': libtcod.desaturated_green,
+        'stats': {'hp':6, 'defense':1, 'power':3, 'xp':12}
+    }
+    GIANT_SPIDER = {
+        'name': 'Giant Spider',
+        'character': 'S',
+        'color': libtcod.dark_sepia,
+        'stats': {'hp':8, 'defense':2, 'power':5, 'xp':15}
+    }
+    BROWN_BEAR = {
+        'name': 'Brown Bear',
+        'character': 'b',
+        'color': libtcod.darkest_sepia,
+        'stats': {'hp':25, 'defense':1, 'power':6, 'xp':48}
+    }
     # Greenskins
+    GOBLIN = {
+        'name': 'Goblin',
+        'character': 'g',
+        'color': libtcod.desaturated_green,
+        'stats': {'hp':10, 'defense':0, 'power':2, 'xp':18}
+    }
     ORC = {
         'name': 'Orc',
         'character': 'o',
         'color': libtcod.desaturated_green,
-        'stats': {'hp':20, 'defense':0, 'power':4, 'xp':35}
+        'stats': {'hp':20, 'defense':1, 'power':3, 'xp':35}
     }
     TROLL = {
         'name': 'Troll',
         'character': 'T',
+        'color': libtcod.darkest_green,
+        'stats': {'hp':30, 'defense':2, 'power':7, 'xp':80}
+    }
+    OGRE = {
+        'name': 'Ogre',
+        'character': 'O',
         'color': libtcod.darker_green,
-        'stats': {'hp':30, 'defense':2, 'power':8, 'xp':100}
+        'stats': {'hp':45, 'defense':4, 'power':12, 'xp':120}
     }
 
     def make_creature_entity(x, y, creature_type):
