@@ -116,8 +116,8 @@ class GameMap:
         number_of_monsters = randint(0, max_monsters_per_room)
 
         monster_chances = {
-            'orc': 80,
-            'troll': from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level)
+            CreatureTypes.ORC: 80,
+            CreatureTypes.TROLL: from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level)
         }
 
         for i in range(number_of_monsters):
@@ -128,12 +128,7 @@ class GameMap:
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 monster_choice = random_choice_from_dict(monster_chances)
-
-                if monster_choice == 'orc':
-                    monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.ORC)
-                else:
-                    monster = CreatureTypes.make_creature_entity(x, y, CreatureTypes.TROLL)
-                entities.append(monster)
+                entities.append(CreatureTypes.make_creature_entity(x, y, monster_choice))
 
     def place_items(self, room, entities):
         max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
@@ -142,12 +137,12 @@ class GameMap:
         number_of_items = randint(0, max_items_per_room)
 
         item_chances = {
-            'healing_potion': 35,
-            'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
-            'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
-            'lightning_scroll': from_dungeon_level([[25, 4]], self.dungeon_level),
-            'fireball_scroll': from_dungeon_level([[25, 6]], self.dungeon_level),
-            'confusion_scroll': from_dungeon_level([[10, 2]], self.dungeon_level)
+            ItemTypes.HEALING_POTION: 35,
+            ItemTypes.SWORD: from_dungeon_level([[5, 4]], self.dungeon_level),
+            ItemTypes.SHIELD: from_dungeon_level([[15, 8]], self.dungeon_level),
+            ItemTypes.FIREBALL_SCROLL: from_dungeon_level([[25, 4]], self.dungeon_level),
+            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[25, 6]], self.dungeon_level),
+            ItemTypes.LIGHTNING_SCROLL: from_dungeon_level([[10, 2]], self.dungeon_level)
         }
 
         for i in range(number_of_items):
@@ -157,20 +152,7 @@ class GameMap:
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 item_choice = random_choice_from_dict(item_chances)
-
-                if item_choice == 'healing_potion':
-                    item = ItemTypes.make_item_entity(x, y, ItemTypes.HEALING_POTION)
-                elif item_choice == 'sword':
-                    item = ItemTypes.make_item_entity(x, y, ItemTypes.SWORD)
-                elif item_choice == 'shield':
-                    item = ItemTypes.make_item_entity(x, y, ItemTypes.SHIELD)
-                elif item_choice == 'fireball_scroll':
-                    item = ItemTypes.make_item_entity(x, y, ItemTypes.FIREBALL_SCROLL)
-                elif item_choice == 'confusion_scroll':
-                    item = ItemTypes.make_item_entity(x, y, ItemTypes.CONFUSION_SCROLL)
-                else:
-                    item = ItemTypes.make_item_entity(x, y, ItemTypes.LIGHTNING_SCROLL)
-                entities.append(item)
+                entities.append(ItemTypes.make_item_entity(x, y, item_choice))
 
     def is_blocked(self, x, y):
         return self.tiles[x][y].blocked
@@ -184,7 +166,6 @@ class GameMap:
                       constants['map_width'], constants['map_height'], player, entities)
 
         player.fighter.heal(player.fighter.max_hp // 2)
-
         message_log.add_message(Message('You take a moment to rest, and recover your strength.', libtcod.light_violet))
 
         return entities
