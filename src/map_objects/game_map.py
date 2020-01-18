@@ -105,9 +105,17 @@ class GameMap:
             self.tiles[x][y].blocked = False
             self.tiles[x][y].block_sight = False
 
+    #
+    # Placing monsters and items
+    #
+
     def place_entities(self, room, entities):
         self.place_monsters(room, entities)
         self.place_items(room, entities)
+
+    def current_chance(self, chance_by_level):
+        # print("current_chance: {!s} {!s}".format(self.dungeon_level, chance_by_level))
+        return from_dungeon_level(chance_by_level, self.dungeon_level)
 
     # Put monsters in a room.
     def place_monsters(self, room, entities):
@@ -116,19 +124,22 @@ class GameMap:
         # Get a random number of monsters
         number_of_monsters = randint(0, max_monsters_per_room)
 
-        monster_chances = {
-            # TODO: check the difficulty of each level several times and tweak probabilities.
-            CreatureTypes.RAT: from_dungeon_level([[100, 1], [60, 2], [40, 3], [20, 5], [0, 7]], self.dungeon_level),
-            CreatureTypes.LARGE_RAT: from_dungeon_level([[70, 1], [60, 2], [40, 4], [20, 6], [0, 8]], self.dungeon_level),
-            CreatureTypes.BOA: 20,
-            CreatureTypes.GIANT_SPIDER: from_dungeon_level([[20, 3], [30, 5], [40, 8], [50, 12], [40, 16]], self.dungeon_level),
-            CreatureTypes.BROWN_BEAR: from_dungeon_level([[15, 6], [20, 8], [30, 10], [50, 12]], self.dungeon_level),
+        # TODO: move this into a data file.
+        monster_chance_by_level = {
+            CreatureTypes.RAT:          [[90, 1], [60, 2], [30, 3], [0, 5]],
+            CreatureTypes.LARGE_RAT:    [[70, 1], [60, 2], [40, 4], [20, 6], [0, 8]],
+            CreatureTypes.BOA:          [[20, 1], [0, 5]],
+            CreatureTypes.GIANT_SPIDER: [[20, 3], [30, 5], [40, 8], [50, 12], [40, 16]],
+            CreatureTypes.BROWN_BEAR:   [[15, 6], [20, 8], [30, 10], [50, 12]],
 
-            CreatureTypes.GOBLIN: from_dungeon_level([[90, 1], [60, 3], [50, 5], [30, 7], [20, 10], [0, 12]], self.dungeon_level),
-            CreatureTypes.ORC: 50,
-            CreatureTypes.TROLL: from_dungeon_level([[5, 4], [15, 6], [30, 8], [60, 13]], self.dungeon_level),
-            CreatureTypes.OGRE: from_dungeon_level([[1, 9], [5, 11], [20, 14], [40, 16]], self.dungeon_level)
+            CreatureTypes.GOBLIN:       [[90, 1], [60, 3], [50, 5], [30, 7], [20, 10], [0, 12]],
+            CreatureTypes.ORC:          [[50, 2]],
+            CreatureTypes.TROLL:        [[5, 4], [15, 6], [30, 8], [60, 13]],
+            CreatureTypes.OGRE:         [[1, 9], [5, 11], [20, 14], [40, 16]]
         }
+
+        current_monster_chances = { m: self.current_chance(chance_by_level)
+            for m, chance_by_level in monster_chance_by_level.items() }
 
         for i in range(number_of_monsters):
             # Choose a random location in the room
@@ -137,7 +148,7 @@ class GameMap:
 
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-                monster_choice = random_choice_from_dict(monster_chances)
+                monster_choice = random_choice_from_dict(current_monster_chances)
                 entities.append(CreatureTypes.make_creature_entity(x, y, monster_choice))
 
     # Put items in a room.
@@ -145,17 +156,21 @@ class GameMap:
         max_items_per_room = from_dungeon_level([[1, 1], [2, 6]], self.dungeon_level)
 
         # Get a random number of items
+        # TODO: pick a number of items for the entire level instead of per room.
         # using random_d2 to lower the number of items per room.
-        number_of_items = random_d2(randint(0, max_items_per_room))
+        number_of_items = random_d2(random_d2(randint(0, max_items_per_room)))
 
-        item_chances = {
-            ItemTypes.HEALING_POTION: 20,
-            ItemTypes.SWORD: from_dungeon_level([[4, 2], [5, 4]], self.dungeon_level),
-            ItemTypes.SHIELD: from_dungeon_level([[5, 3], [12, 8]], self.dungeon_level),
-            ItemTypes.FIREBALL_SCROLL: from_dungeon_level([[6, 6]], self.dungeon_level),
-            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[10, 2], [8, 6]], self.dungeon_level),
-            ItemTypes.LIGHTNING_SCROLL: from_dungeon_level([[8, 4], [6, 6]], self.dungeon_level)
+        # TODO: move this into a data file.
+        item_chance_by_level = {
+            ItemTypes.HEALING_POTION:   [[50, 1]],
+            ItemTypes.SWORD:            [        [15, 2],          [25, 4]],
+            ItemTypes.SHIELD:           [                 [20, 3],                    [25, 8]],
+            ItemTypes.FIREBALL_SCROLL:  [                                    [20, 6]],
+            ItemTypes.CONFUSION_SCROLL: [        [15, 2],                    [20, 6]],
+            ItemTypes.LIGHTNING_SCROLL: [                          [10, 4],  [20, 6]]
         }
+        current_item_chances = { m: self.current_chance(chance_by_level)
+            for m, chance_by_level in item_chance_by_level.items() }
 
         for i in range(number_of_items):
             x = randint(room.x1 + 1, room.x2 - 1)
@@ -163,7 +178,7 @@ class GameMap:
 
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-                item_choice = random_choice_from_dict(item_chances)
+                item_choice = random_choice_from_dict(current_item_chances)
                 entities.append(ItemTypes.make_item_entity(x, y, item_choice, self.dungeon_level))
 
     def is_blocked(self, x, y):
