@@ -126,8 +126,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
         if level_up:
             if level_up == 'hp':
-                player.fighter.base_max_hp += 20
-                player.fighter.hp += 20
+                # Increase HP by 20%
+                new_hp = int(0.2 * player.fighter.base_max_hp)
+                player.fighter.base_max_hp += new_hp
+                player.fighter.hp += new_hp
             elif level_up == 'str':
                 player.fighter.base_power += 1
             elif level_up == 'def':
