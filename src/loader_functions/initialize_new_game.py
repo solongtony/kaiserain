@@ -82,7 +82,8 @@ def get_constants():
 
 def get_game_variables(constants):
 
-    entities = [create_player]
+    player = create_player()
+    entities = [player]
 
     game_map = GameMap(constants['map_width'], constants['map_height'])
     game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
@@ -95,7 +96,7 @@ def get_game_variables(constants):
     return player, entities, game_map, message_log, game_state
 
 
-def create_player:
+def create_player():
     # Components of the player.
     fighter_component = Fighter(hp=60, defense=2, power=4)
     inventory_component = Inventory(26)
@@ -110,4 +111,4 @@ def create_player:
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)
 
-    player
+    return player
