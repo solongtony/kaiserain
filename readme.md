@@ -11,6 +11,7 @@ Movement with arrow keys or number pad keys.
 
 Actions:
 
+Main Menu:        Esc
 Pickup (**G**et): g
 **I**nventory:    i
 **D**rop:         d
@@ -33,13 +34,26 @@ By making defense randomized as well, it will avoids the situation where some cr
 Monsters stop moving when there is not a continuous path to the PC, even if they
 could get closer than they are.  See "Monster Movement" TODO.
 
-* Direction key
-If I hold a direction key down, character continues to move in that direction
-after releasing the key. This can be fatal, if you run into a wall and monsters
-keep attacking you. This was specifically mentioned as being addressed in the
-original tutorial, need to look that up.
 
-# TODO list
+# Roadmap
+
+## Code cleanup
+
+Menus, menu key handling, and menu result handler should all be together in code.
+
+Data definitions for monsters and items should be actual data files, like JSON,
+instead of data dictionaries in code.
+
+Better handling for dynamic parts of items and monsters, e.g. item bonuses and monster difficulty.
+
+### Engine
+
+There's way too much inline code in the game engine.  Pull things out into methods.
+
+Implement callbacks/handlers where they make sense instead of using state tracking for everything.
+
+
+## Features
 
 * More monster types.
 
