@@ -109,6 +109,7 @@ class GameMap:
         self.place_monsters(room, entities)
         self.place_items(room, entities)
 
+    # Put monsters in a room.
     def place_monsters(self, room, entities):
         max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [4, 6], [5, 9]], self.dungeon_level)
 
@@ -138,6 +139,7 @@ class GameMap:
                 monster_choice = random_choice_from_dict(monster_chances)
                 entities.append(CreatureTypes.make_creature_entity(x, y, monster_choice))
 
+    # Put items in a room.
     def place_items(self, room, entities):
         max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
 
@@ -145,12 +147,12 @@ class GameMap:
         number_of_items = randint(0, max_items_per_room)
 
         item_chances = {
-            ItemTypes.HEALING_POTION: 35,
+            ItemTypes.HEALING_POTION: 8,
             ItemTypes.SWORD: from_dungeon_level([[5, 4]], self.dungeon_level),
-            ItemTypes.SHIELD: from_dungeon_level([[5, 3], [15, 8]], self.dungeon_level),
-            ItemTypes.FIREBALL_SCROLL: from_dungeon_level([[25, 4]], self.dungeon_level),
-            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[25, 6]], self.dungeon_level),
-            ItemTypes.LIGHTNING_SCROLL: from_dungeon_level([[10, 2]], self.dungeon_level)
+            ItemTypes.SHIELD: from_dungeon_level([[5, 3], [12, 8]], self.dungeon_level),
+            ItemTypes.FIREBALL_SCROLL: from_dungeon_level([[6, 6]], self.dungeon_level),
+            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[12, 2], [10, 4], [8, 6]], self.dungeon_level),
+            ItemTypes.LIGHTNING_SCROLL: from_dungeon_level([[8, 4], [6, 6]], self.dungeon_level)
         }
 
         for i in range(number_of_items):
@@ -172,9 +174,5 @@ class GameMap:
         self.tiles = self.initialize_tiles()
         self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
                       constants['map_width'], constants['map_height'], player, entities)
-
-        # Heal when you go to next level.  Don't like this.
-        # player.fighter.heal(player.fighter.max_hp // 2)
-        # message_log.add_message(Message('You take a moment to rest, and recover your strength.', libtcod.light_violet))
 
         return entities
