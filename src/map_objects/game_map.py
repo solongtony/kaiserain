@@ -9,7 +9,7 @@ from entity.creature_types import CreatureTypes
 from entity.item_types import ItemTypes
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
-from random_utils import from_dungeon_level, random_choice_from_dict
+from random_utils import from_dungeon_level, random_choice_from_dict, random_d2
 from render_functions import RenderOrder
 
 STAIRS_DOWN_CHARACTER = '>'
@@ -111,22 +111,23 @@ class GameMap:
 
     # Put monsters in a room.
     def place_monsters(self, room, entities):
-        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [4, 6], [5, 9]], self.dungeon_level)
+        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [4, 7], [5, 11]], self.dungeon_level)
 
         # Get a random number of monsters
         number_of_monsters = randint(0, max_monsters_per_room)
 
         monster_chances = {
             # TODO: check the difficulty of each level several times and tweak probabilities.
-            CreatureTypes.RAT: from_dungeon_level([[80, 1], [60, 2], [40, 3], [20, 5], [0, 7]], self.dungeon_level),
+            CreatureTypes.RAT: from_dungeon_level([[100, 1], [60, 2], [40, 3], [20, 5], [0, 7]], self.dungeon_level),
             CreatureTypes.LARGE_RAT: from_dungeon_level([[70, 1], [60, 2], [40, 4], [20, 6], [0, 8]], self.dungeon_level),
             CreatureTypes.BOA: 20,
-            CreatureTypes.GIANT_SPIDER: from_dungeon_level([[20, 2], [30, 4], [50, 8], [30, 12], [5, 16]], self.dungeon_level),
-            CreatureTypes.BROWN_BEAR: from_dungeon_level([[15, 4], [30, 7], [60, 10]], self.dungeon_level),
-            CreatureTypes.GOBLIN: from_dungeon_level([[60, 1], [50, 3], [30, 5], [10, 7], [0, 10]], self.dungeon_level),
+            CreatureTypes.GIANT_SPIDER: from_dungeon_level([[20, 3], [30, 5], [40, 8], [50, 12], [40, 16]], self.dungeon_level),
+            CreatureTypes.BROWN_BEAR: from_dungeon_level([[15, 6], [20, 8], [30, 10], [50, 12]], self.dungeon_level),
+
+            CreatureTypes.GOBLIN: from_dungeon_level([[90, 1], [60, 3], [50, 5], [30, 7], [20, 10], [0, 12]], self.dungeon_level),
             CreatureTypes.ORC: 50,
-            CreatureTypes.TROLL: from_dungeon_level([[5, 3], [15, 5], [30, 7], [60, 9]], self.dungeon_level),
-            CreatureTypes.OGRE: from_dungeon_level([[5, 7], [20, 9], [40, 11]], self.dungeon_level)
+            CreatureTypes.TROLL: from_dungeon_level([[5, 4], [15, 6], [30, 8], [60, 13]], self.dungeon_level),
+            CreatureTypes.OGRE: from_dungeon_level([[1, 9], [5, 11], [20, 14], [40, 16]], self.dungeon_level)
         }
 
         for i in range(number_of_monsters):
@@ -141,17 +142,18 @@ class GameMap:
 
     # Put items in a room.
     def place_items(self, room, entities):
-        max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
+        max_items_per_room = from_dungeon_level([[1, 1], [2, 6]], self.dungeon_level)
 
         # Get a random number of items
-        number_of_items = randint(0, max_items_per_room)
+        # using random_d2 to lower the number of items per room.
+        number_of_items = random_d2(randint(0, max_items_per_room))
 
         item_chances = {
-            ItemTypes.HEALING_POTION: 8,
-            ItemTypes.SWORD: from_dungeon_level([[5, 4]], self.dungeon_level),
+            ItemTypes.HEALING_POTION: 20,
+            ItemTypes.SWORD: from_dungeon_level([[4, 2], [5, 4]], self.dungeon_level),
             ItemTypes.SHIELD: from_dungeon_level([[5, 3], [12, 8]], self.dungeon_level),
             ItemTypes.FIREBALL_SCROLL: from_dungeon_level([[6, 6]], self.dungeon_level),
-            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[12, 2], [10, 4], [8, 6]], self.dungeon_level),
+            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[10, 2], [8, 6]], self.dungeon_level),
             ItemTypes.LIGHTNING_SCROLL: from_dungeon_level([[8, 4], [6, 6]], self.dungeon_level)
         }
 
@@ -162,7 +164,7 @@ class GameMap:
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 item_choice = random_choice_from_dict(item_chances)
-                entities.append(ItemTypes.make_item_entity(x, y, item_choice))
+                entities.append(ItemTypes.make_item_entity(x, y, item_choice, self.dungeon_level))
 
     def is_blocked(self, x, y):
         return self.tiles[x][y].blocked
