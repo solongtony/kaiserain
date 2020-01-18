@@ -1,0 +1,4 @@
+__pycache__
+savegame.dat
+saved_games/*
+*.pyc
