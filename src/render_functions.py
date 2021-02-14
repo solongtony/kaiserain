@@ -42,7 +42,7 @@ def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_c
 def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log, screen_width, screen_height,
                bar_width, panel_height, panel_y, mouse, colors, game_state):
     if fov_recompute:
-    # Draw all the tiles in the game map
+        # Draw all the tiles in the game map
         for y in range(game_map.height):
             for x in range(game_map.width):
                 visible = libtcod.map_is_in_fov(fov_map, x, y)

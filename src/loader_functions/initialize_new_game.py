@@ -48,10 +48,10 @@ def get_constants():
     max_items_per_room = 2
 
     colors = {
-        'dark_wall': libtcod.Color(0, 0, 100),
-        'dark_ground': libtcod.Color(50, 50, 150),
-        'light_wall': libtcod.Color(130, 110, 50),
-        'light_ground': libtcod.Color(200, 180, 50)
+        'dark_wall': libtcod.Color(15, 36, 54),
+        'dark_ground': libtcod.Color(20, 50, 75),
+        'light_wall': libtcod.Color(130, 100, 50),
+        'light_ground': libtcod.Color(185, 160, 75)
     }
 
     constants = {
@@ -102,7 +102,11 @@ def create_player():
     inventory_component = Inventory(26)
     level_component = Level()
     equipment_component = Equipment()
-    player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR,
+    # TODO: I made the light floor lighter, but now a white character does not
+    # have enough contrast.  Try very dark colors for the character.
+    # May even need to make the light floor color lighter.
+    player_color = libtcod.white
+    player = Entity(0, 0, '@', player_color, 'Player', blocks=True, render_order=RenderOrder.ACTOR,
                     fighter=fighter_component, inventory=inventory_component, level=level_component,
                     equipment=equipment_component)
 
