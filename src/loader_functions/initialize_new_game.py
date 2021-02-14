@@ -48,10 +48,10 @@ def get_constants():
     max_items_per_room = 2
 
     colors = {
-        'dark_wall': libtcod.Color(0, 0, 100),
-        'dark_ground': libtcod.Color(50, 50, 150),
-        'light_wall': libtcod.Color(130, 110, 50),
-        'light_ground': libtcod.Color(200, 180, 50)
+        'dark_wall': libtcod.Color(15, 36, 54),
+        'dark_ground': libtcod.Color(20, 50, 75),
+        'light_wall': libtcod.Color(130, 100, 50),
+        'light_ground': libtcod.Color(185, 160, 75)
     }
 
     constants = {
@@ -81,19 +81,9 @@ def get_constants():
 
 
 def get_game_variables(constants):
-    fighter_component = Fighter(hp=100, defense=1, power=2)
-    inventory_component = Inventory(26)
-    level_component = Level()
-    equipment_component = Equipment()
-    player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True, render_order=RenderOrder.ACTOR,
-                    fighter=fighter_component, inventory=inventory_component, level=level_component,
-                    equipment=equipment_component)
-    entities = [player]
 
-    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-    dagger = Entity(0, 0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
-    player.inventory.add_item(dagger)
-    player.equipment.toggle_equip(dagger)
+    player = create_player()
+    entities = [player]
 
     game_map = GameMap(constants['map_width'], constants['map_height'])
     game_map.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
@@ -104,3 +94,25 @@ def get_game_variables(constants):
     game_state = GameStates.PLAYERS_TURN
 
     return player, entities, game_map, message_log, game_state
+
+
+def create_player():
+    # Components of the player.
+    fighter_component = Fighter(hp=60, defense=2, power=4)
+    inventory_component = Inventory(26)
+    level_component = Level()
+    equipment_component = Equipment()
+    # TODO: I made the light floor lighter, but now a white character does not
+    # have enough contrast.  Try very dark colors for the character.
+    # May even need to make the light floor color lighter.
+    player_color = libtcod.white
+    player = Entity(0, 0, '@', player_color, 'Player', blocks=True, render_order=RenderOrder.ACTOR,
+                    fighter=fighter_component, inventory=inventory_component, level=level_component,
+                    equipment=equipment_component)
+
+    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
+    dagger = Entity(0, 0, '-', libtcod.darker_sky, 'Dagger', equippable=equippable_component)
+    player.inventory.add_item(dagger)
+    player.equipment.toggle_equip(dagger)
+
+    return player

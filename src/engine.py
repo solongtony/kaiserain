@@ -1,6 +1,6 @@
 import libtcodpy as libtcod
 
-from death_functions import kill_monster, kill_player
+from death import kill_monster, kill_player
 from entity.entity import get_blocking_entities_at_location
 from fov_functions import initialize_fov, recompute_fov
 from game_messages import Message
@@ -13,6 +13,7 @@ from render_functions import clear_all, render_all
 
 # TODO: where are constants defined?
 FONT = 'arial12x12.png'
+
 
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants):
     fov_recompute = True
@@ -126,8 +127,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
         if level_up:
             if level_up == 'hp':
-                player.fighter.base_max_hp += 20
-                player.fighter.hp += 20
+                # Increase HP by 20%
+                new_hp = int(0.2 * player.fighter.base_max_hp)
+                player.fighter.base_max_hp += new_hp
+                player.fighter.hp += new_hp
             elif level_up == 'str':
                 player.fighter.base_power += 1
             elif level_up == 'def':
@@ -266,9 +269,15 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 def main():
     constants = get_constants()
 
-    libtcod.console_set_custom_font(FONT, libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
+    libtcod.console_set_custom_font(
+        FONT,
+        libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
 
-    libtcod.console_init_root(constants['screen_width'], constants['screen_height'], constants['window_title'], False)
+    libtcod.console_init_root(
+        constants['screen_width'],
+        constants['screen_height'],
+        constants['window_title'],
+        False)
 
     con = libtcod.console_new(constants['screen_width'], constants['screen_height'])
     panel = libtcod.console_new(constants['screen_width'], constants['panel_height'])
@@ -321,7 +330,9 @@ def main():
 
         else:
             libtcod.console_clear(con)
-            play_game(player, entities, game_map, message_log, game_state, con, panel, constants)
+            play_game(
+                player, entities, game_map, message_log,
+                game_state, con, panel, constants)
 
             show_main_menu = True
 

@@ -1,2 +1,4 @@
 #!/bin/sh
-python3 src/engine.py
+
+# Run in the background.
+python3 src/engine.py &

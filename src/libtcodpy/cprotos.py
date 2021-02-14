@@ -2,28 +2,31 @@
 from ctypes import *
 from libtcodpy import Color
 
+# Documentation of named colors
+# http://www.roguecentral.org/doryen/data/libtcod/doc/1.5.1/html2/color.html
+
 c_void = None
 
 def setup_protos(lib):
-    #_lib.TCOD_line.restype=c_bool 
+    #_lib.TCOD_line.restype=c_bool
     #_lib.TCOD_line.argtypes=[c_int, c_int, c_int, c_int, TCOD_line_listener_t]
 
-    #_lib.TCOD_line_mt.restype=c_bool 
+    #_lib.TCOD_line_mt.restype=c_bool
     #_lib.TCOD_line_mt.argtypes=[c_int, c_int, c_int, c_int, TCOD_line_listener_t , c_void_p]
 
-    #_lib.c_void_pre_order.restype=c_bool 
+    #_lib.c_void_pre_order.restype=c_bool
     #_lib.c_void_pre_order.argtypes=[c_void_p, TCOD_bsp_callback_t , void_p]
 
-    #_lib.TCOD_bsp_traverse_in_order.restype=c_bool 
+    #_lib.TCOD_bsp_traverse_in_order.restype=c_bool
     #_lib.TCOD_bsp_traverse_in_order.argtypes=[c_void_p, TCOD_bsp_callback_t , void_p]
 
-    #_lib.c_void_post_order.restype=c_bool 
+    #_lib.c_void_post_order.restype=c_bool
     #_lib.c_void_post_order.argtypes=[c_void_p, TCOD_bsp_callback_t , void_p]
 
-    #_lib.TCOD_bsp_traverse_level_order.restype=c_bool 
+    #_lib.TCOD_bsp_traverse_level_order.restype=c_bool
     #_lib.TCOD_bsp_traverse_level_order.argtypes=[c_void_p, TCOD_bsp_callback_t , void_p]
 
-    #_lib.TCOD_bsp_traverse_inverted_level_order.restype=c_bool 
+    #_lib.TCOD_bsp_traverse_inverted_level_order.restype=c_bool
     #_lib.TCOD_bsp_traverse_inverted_level_order.argtypes=[c_void_p, TCOD_bsp_callback_t , void_p]
 
 

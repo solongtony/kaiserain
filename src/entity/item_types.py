@@ -8,6 +8,7 @@ from components.item import Item
 from entity.entity import Entity
 from game_messages import Message
 from item_functions import cast_confuse, cast_fireball, cast_lightning, heal
+from random_utils import random_d2
 from render_functions import RenderOrder
 
 class ItemTypes(Enum):
@@ -23,16 +24,26 @@ class ItemTypes(Enum):
     SWORD = {
         'name': 'Sword',
         'character': '/',
-        'color': libtcod.sky,
+        'color': libtcod.dark_blue,
         'item': None,
-        'equipable': Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
+        # 'equipable': Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
+        'equipable': {
+            'slot': EquipmentSlots.MAIN_HAND,
+            'defense_bonus': 0,
+            'power_bonus': 3
+        }
     }
     SHIELD = {
         'name': 'Shield',
         'character': '[',
         'color': libtcod.darker_orange,
         'item': None,
-        'equipable': Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
+        #'equipable': Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
+        'equipable': {
+            'slot': EquipmentSlots.OFF_HAND,
+            'defense_bonus': 1,
+            'power_bonus': 0
+        }
     }
     # Scrolls
     FIREBALL_SCROLL = {
@@ -66,12 +77,33 @@ class ItemTypes(Enum):
         'equipable': None
     }
 
-    def make_item_entity(x, y, item_type):
+    def make_item_entity(x, y, item_type, dungeon_level):
         item_value = item_type.value
-        item_component = item_value['item']
-        equipable_component = item_value['equipable']
+
+        # Equipment can be more powerful the deeper you go.
+        bonus = random_d2(dungeon_level // 4)
+
+        # Possibly add name modifier, e.g. "Sword +2"
+        name = item_value['name']
+
+        equip_values = item_value['equipable']
+        if equip_values:
+            if bonus > 0:
+                name += " +" + str(bonus)
+            # Assign bonus to either non-zero stat.
+            defense_bonus = 0 if equip_values['defense_bonus'] == 0 else equip_values['defense_bonus'] + bonus
+            power_bonus = 0 if equip_values['power_bonus'] == 0 else equip_values['power_bonus'] + bonus
+
+            equipable_component = Equippable(equip_values['slot'], defense_bonus = defense_bonus, power_bonus = power_bonus)
+        else:
+            equipable_component = None
+
         item = Entity(
-            x, y, item_value['character'], item_value['color'],
-            item_value['name'], render_order=RenderOrder.ITEM,
-            item=item_component, equippable=equipable_component)
+            x, y,
+            item_value['character'],
+            item_value['color'],
+            name,
+            render_order=RenderOrder.ITEM,
+            item=item_value['item'],
+            equippable=equipable_component)
         return item

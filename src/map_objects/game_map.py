@@ -9,7 +9,7 @@ from entity.creature_types import CreatureTypes
 from entity.item_types import ItemTypes
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
-from random_utils import from_dungeon_level, random_choice_from_dict
+from random_utils import from_dungeon_level, random_choice_from_dict, random_d2
 from render_functions import RenderOrder
 
 STAIRS_DOWN_CHARACTER = '>'
@@ -105,28 +105,41 @@ class GameMap:
             self.tiles[x][y].blocked = False
             self.tiles[x][y].block_sight = False
 
+    #
+    # Placing monsters and items
+    #
+
     def place_entities(self, room, entities):
         self.place_monsters(room, entities)
         self.place_items(room, entities)
 
+    def current_chance(self, chance_by_level):
+        # print("current_chance: {!s} {!s}".format(self.dungeon_level, chance_by_level))
+        return from_dungeon_level(chance_by_level, self.dungeon_level)
+
+    # Put monsters in a room.
     def place_monsters(self, room, entities):
-        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [4, 6], [5, 9]], self.dungeon_level)
+        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [4, 7], [5, 11]], self.dungeon_level)
 
         # Get a random number of monsters
         number_of_monsters = randint(0, max_monsters_per_room)
 
+        # TODO: move this into a data file.
+        monster_chance_by_level = {
+            CreatureTypes.RAT:          [[90, 1], [60, 2], [30, 3], [0, 5]],
+            CreatureTypes.LARGE_RAT:    [[70, 1], [60, 2], [40, 4], [20, 6], [0, 8]],
+            CreatureTypes.BOA_SNAKE:    [[20, 1], [0, 5]],
+            CreatureTypes.GIANT_SPIDER: [[20, 3], [30, 5], [40, 8], [50, 12], [40, 16]],
+            CreatureTypes.BROWN_BEAR:   [[15, 6], [20, 8], [30, 10], [50, 12]],
 
-        monster_chances = {
-            # TODO: check the difficulty of each level several times and tweak probabilities.
-            CreatureTypes.LARGE_RAT: from_dungeon_level([[80, 1], [60, 2], [40, 3], [20, 5], [0, 7]], self.dungeon_level),
-            CreatureTypes.BOA_SNAKE: 20,
-            CreatureTypes.GIANT_SPIDER: from_dungeon_level([[20, 2], [30, 4], [50, 8]], self.dungeon_level),
-            CreatureTypes.BROWN_BEAR: from_dungeon_level([[15, 4], [30, 7], [60, 10]], self.dungeon_level),
-            CreatureTypes.GOBLIN: from_dungeon_level([[60, 1], [50, 3], [30, 5], [10, 7], [0, 10]], self.dungeon_level),
-            CreatureTypes.ORC: 50,
-            CreatureTypes.TROLL: from_dungeon_level([[5, 3], [15, 5], [30, 7], [60, 9]], self.dungeon_level),
-            CreatureTypes.OGRE: from_dungeon_level([[5, 7], [20, 9], [40, 11]], self.dungeon_level)
+            CreatureTypes.GOBLIN:       [[90, 1], [60, 3], [50, 5], [30, 7], [20, 10], [0, 12]],
+            CreatureTypes.ORC:          [[50, 2]],
+            CreatureTypes.TROLL:        [[5, 4], [15, 6], [30, 8], [60, 13]],
+            CreatureTypes.OGRE:         [[1, 9], [5, 11], [20, 14], [40, 16]]
         }
+
+        current_monster_chances = { m: self.current_chance(chance_by_level)
+            for m, chance_by_level in monster_chance_by_level.items() }
 
         for i in range(number_of_monsters):
             # Choose a random location in the room
@@ -135,23 +148,29 @@ class GameMap:
 
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-                monster_choice = random_choice_from_dict(monster_chances)
+                monster_choice = random_choice_from_dict(current_monster_chances)
                 entities.append(CreatureTypes.make_creature_entity(x, y, monster_choice))
 
+    # Put items in a room.
     def place_items(self, room, entities):
-        max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
+        max_items_per_room = from_dungeon_level([[1, 1], [2, 6]], self.dungeon_level)
 
         # Get a random number of items
-        number_of_items = randint(0, max_items_per_room)
+        # TODO: pick a number of items for the entire level instead of per room.
+        # using random_d2 to lower the number of items per room.
+        number_of_items = random_d2(random_d2(randint(0, max_items_per_room)))
 
-        item_chances = {
-            ItemTypes.HEALING_POTION: 35,
-            ItemTypes.SWORD: from_dungeon_level([[5, 4]], self.dungeon_level),
-            ItemTypes.SHIELD: from_dungeon_level([[15, 8]], self.dungeon_level),
-            ItemTypes.FIREBALL_SCROLL: from_dungeon_level([[25, 4]], self.dungeon_level),
-            ItemTypes.CONFUSION_SCROLL: from_dungeon_level([[25, 6]], self.dungeon_level),
-            ItemTypes.LIGHTNING_SCROLL: from_dungeon_level([[10, 2]], self.dungeon_level)
+        # TODO: move this into a data file.
+        item_chance_by_level = {
+            ItemTypes.HEALING_POTION:   [[50, 1]],
+            ItemTypes.SWORD:            [        [15, 2],          [25, 4]],
+            ItemTypes.SHIELD:           [                 [20, 3],                    [25, 8]],
+            ItemTypes.FIREBALL_SCROLL:  [                                    [20, 6]],
+            ItemTypes.CONFUSION_SCROLL: [        [15, 2],                    [20, 6]],
+            ItemTypes.LIGHTNING_SCROLL: [                          [10, 4],  [20, 6]]
         }
+        current_item_chances = { m: self.current_chance(chance_by_level)
+            for m, chance_by_level in item_chance_by_level.items() }
 
         for i in range(number_of_items):
             x = randint(room.x1 + 1, room.x2 - 1)
@@ -159,8 +178,8 @@ class GameMap:
 
             # Check if an entity is already in that location
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-                item_choice = random_choice_from_dict(item_chances)
-                entities.append(ItemTypes.make_item_entity(x, y, item_choice))
+                item_choice = random_choice_from_dict(current_item_chances)
+                entities.append(ItemTypes.make_item_entity(x, y, item_choice, self.dungeon_level))
 
     def is_blocked(self, x, y):
         return self.tiles[x][y].blocked
@@ -172,8 +191,5 @@ class GameMap:
         self.tiles = self.initialize_tiles()
         self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
                       constants['map_width'], constants['map_height'], player, entities)
-
-        player.fighter.heal(player.fighter.max_hp // 2)
-        message_log.add_message(Message('You take a moment to rest, and recover your strength.', libtcod.light_violet))
 
         return entities
